@@ -22,8 +22,8 @@ function tone(s: Meetup['status']) {
 
 export function EventsTable() {
   const { data = [] } = useGetEventsQuery()
-  const [setStatus] = useSetEventStatusMutation()
-  const [status, setStatus] = useState('all')
+  const [setEventStatus] = useSetEventStatusMutation()
+  const [status, setStatusFilter] = useState('all')
   const [when, setWhen] = useState<WhenPreset>('all')
   const [cancelling, setCancelling] = useState<Meetup | null>(null)
   const scoped = useMemo(
@@ -47,7 +47,7 @@ export function EventsTable() {
             label: 'Status',
             value: status,
             onChange: (v) => {
-              setStatus(v)
+              setStatusFilter(v)
               table.setPage(1)
             },
             options: [
@@ -90,7 +90,7 @@ export function EventsTable() {
           { key: 'status', header: 'Status', render: (r) => <Badge tone={tone(r.status)}>{r.status}</Badge> },
           {
             key: 'actions',
-            header: '',
+            header: 'Action',
             render: (r) => (
               <RowMenu
                 items={
@@ -113,7 +113,7 @@ export function EventsTable() {
         danger
         onClose={() => setCancelling(null)}
         onConfirm={() => {
-          if (cancelling) void setStatus({ id: cancelling.id, status: 'cancelled' })
+          if (cancelling) void setEventStatus({ id: cancelling.id, status: 'cancelled' })
           setCancelling(null)
         }}
       />

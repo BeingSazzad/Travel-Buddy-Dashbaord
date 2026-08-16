@@ -22,6 +22,7 @@ const store = createStore<Subscriber>(SUBS_STORAGE_KEY, [
   { id: 'sub5', memberId: 'u4', member: 'Maya Chen', email: 'maya@seluna.app', planId: 'monthly', status: 'cancelled', renews: '2026-08-09' },
   { id: 'sub6', memberId: 'u7', member: 'Elena Rossi', email: 'elena@seluna.app', planId: 'monthly', status: 'expired', renews: '2026-07-22' },
   { id: 'sub7', memberId: 'u8', member: 'Hana Kim', email: 'hana@seluna.app', planId: 'yearly', status: 'cancelled', renews: '2026-02-28' },
+  { id: 'sub8', memberId: 'u6', member: 'Priya Shah', email: 'priya@seluna.app', planId: 'monthly', status: 'pending', renews: '2026-09-01' },
 ])
 
 function syncMember(row: Subscriber) {

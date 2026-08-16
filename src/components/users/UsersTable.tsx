@@ -24,6 +24,12 @@ function statusTone(s: AdminUser['status']) {
   return 'danger' as const
 }
 
+function subTone(s: string) {
+  if (s === 'active') return 'success' as const
+  if (s === 'pending') return 'warn' as const
+  return 'neutral' as const
+}
+
 export function UsersTable() {
   const navigate = useNavigate()
   const { data = [] } = useGetUsersQuery()
@@ -81,20 +87,20 @@ export function UsersTable() {
             key: 'subscription',
             header: 'Subscriber',
             render: (r) => {
-              const sub = subscribers.find((s) => s.memberId === r.id)
-              if (!sub) return <span className="text-muted">—</span>
+              const sub = subscribers.find((s) => s.memberId === r.id || s.email === r.email)
+              if (!sub) return <span className="text-muted">None</span>
               const plan = plans.find((p) => p.id === sub.planId)
               return (
                 <span className="inline-flex items-center gap-2">
                   <span className="text-sm">{plan?.name ?? 'Plan'}</span>
-                  <Badge tone={sub.status === 'active' ? 'success' : 'neutral'}>{sub.status}</Badge>
+                  <Badge tone={subTone(sub.status)}>{sub.status}</Badge>
                 </span>
               )
             },
           },
           {
             key: 'actions',
-            header: '',
+            header: 'Action',
             render: (r) => (
               <RowMenu
                 items={[

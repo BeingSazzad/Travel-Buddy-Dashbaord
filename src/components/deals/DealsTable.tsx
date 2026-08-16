@@ -71,7 +71,7 @@ export function DealsTable() {
           },
           {
             key: 'actions',
-            header: '',
+            header: 'Action',
             render: (r) => (
               <RowMenu items={[{ label: r.active ? 'Turn off' : 'Turn on', onClick: () => toggle(r.id) }]} />
             ),

@@ -76,7 +76,7 @@ export function ReviewsTable() {
           },
           {
             key: 'actions',
-            header: '',
+            header: 'Action',
             render: (r) => (
               <RowMenu
                 items={[

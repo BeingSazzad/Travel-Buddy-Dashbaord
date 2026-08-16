@@ -107,10 +107,6 @@ export function PlanFormModal({
           placeholder="One perk per line"
         />
         <label className="flex items-center gap-2 text-sm text-ink">
-          <input type="checkbox" checked={draft.featured} onChange={(e) => setDraft({ ...draft, featured: e.target.checked })} />
-          Highlight as best value
-        </label>
-        <label className="flex items-center gap-2 text-sm text-ink">
           <input type="checkbox" checked={draft.active} onChange={(e) => setDraft({ ...draft, active: e.target.checked })} />
           Visible in the app
         </label>

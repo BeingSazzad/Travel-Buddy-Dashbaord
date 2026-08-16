@@ -88,7 +88,7 @@ export function TripsTable() {
           },
           {
             key: 'actions',
-            header: '',
+            header: 'Action',
             render: (r) => (
               <RowMenu
                 items={[

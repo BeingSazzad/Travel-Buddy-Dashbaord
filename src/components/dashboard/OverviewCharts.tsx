@@ -32,35 +32,52 @@ function monthDelta(current: number, previous: number) {
   return Math.round(((current - previous) / previous) * 100)
 }
 
-export function OverviewCharts({ data }: { data: DashboardCharts }) {
-  const defaultYear = data.years[data.years.length - 1] ?? 2026
-  const [year, setYear] = useState(String(defaultYear))
-  const months = useMemo(() => {
-    const rows = data.byYear[Number(year)] ?? []
-    const now = new Date()
-    if (Number(year) !== now.getFullYear()) return rows
-    return rows.slice(0, now.getMonth() + 1)
-  }, [data.byYear, year])
-  const last = months.at(-1)
-  const prev = months.length > 1 ? months[months.length - 2] : last
-  const incomeTotal = months.reduce((sum, row) => sum + row.income, 0)
-  const paidShare = last && last.members > 0 ? Math.round((last.paid / last.members) * 100) : 0
-  const membersDelta = monthDelta(last?.members ?? 0, prev?.members ?? 0)
-  const incomeDelta = monthDelta(last?.income ?? 0, prev?.income ?? 0)
+function monthsForYear(data: DashboardCharts, year: string) {
+  const rows = data.byYear[Number(year)] ?? []
+  const now = new Date()
+  if (Number(year) !== now.getFullYear()) return rows
+  return rows.slice(0, now.getMonth() + 1)
+}
 
-  function YearSelect() {
-    return (
-      <div className="w-[108px] shrink-0">
-        <Select
-          aria-label="Year"
-          value={year}
-          onChange={(e) => setYear(e.target.value)}
-          options={data.years.map((y) => ({ value: String(y), label: String(y) }))}
-          className="h-9"
-        />
-      </div>
-    )
-  }
+function YearSelect({
+  value,
+  years,
+  label,
+  onChange,
+}: {
+  value: string
+  years: number[]
+  label: string
+  onChange: (year: string) => void
+}) {
+  return (
+    <div className="w-[108px] shrink-0">
+      <Select
+        aria-label={label}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        options={years.map((y) => ({ value: String(y), label: String(y) }))}
+        className="h-9"
+      />
+    </div>
+  )
+}
+
+export function OverviewCharts({ data }: { data: DashboardCharts }) {
+  const defaultYear = String(data.years[data.years.length - 1] ?? 2026)
+  const [growthYear, setGrowthYear] = useState(defaultYear)
+  const [incomeYear, setIncomeYear] = useState(defaultYear)
+  const growthMonths = useMemo(() => monthsForYear(data, growthYear), [data, growthYear])
+  const incomeMonths = useMemo(() => monthsForYear(data, incomeYear), [data, incomeYear])
+
+  const lastGrowth = growthMonths.at(-1)
+  const prevGrowth = growthMonths.length > 1 ? growthMonths[growthMonths.length - 2] : lastGrowth
+  const lastIncome = incomeMonths.at(-1)
+  const prevIncome = incomeMonths.length > 1 ? incomeMonths[incomeMonths.length - 2] : lastIncome
+  const incomeTotal = incomeMonths.reduce((sum, row) => sum + row.income, 0)
+  const paidShare = lastGrowth && lastGrowth.members > 0 ? Math.round((lastGrowth.paid / lastGrowth.members) * 100) : 0
+  const membersDelta = monthDelta(lastGrowth?.members ?? 0, prevGrowth?.members ?? 0)
+  const incomeDelta = monthDelta(lastIncome?.income ?? 0, prevIncome?.income ?? 0)
 
   return (
     <div className="mt-7 grid gap-4 xl:grid-cols-2 xl:items-stretch">
@@ -70,12 +87,12 @@ export function OverviewCharts({ data }: { data: DashboardCharts }) {
             <h2 className="font-display text-sm font-semibold text-ink">User growth</h2>
             <p className="mt-0.5 text-xs text-muted">How the community compounds each month</p>
           </div>
-          <YearSelect />
+          <YearSelect label="User growth year" value={growthYear} years={data.years} onChange={setGrowthYear} />
         </div>
         <div className="mb-4 mt-3 flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="font-display text-[26px] font-semibold leading-none tracking-tight tabular-nums">
-              {(last?.members ?? 0).toLocaleString()}
+              {(lastGrowth?.members ?? 0).toLocaleString()}
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <Delta value={membersDelta} />
@@ -95,7 +112,7 @@ export function OverviewCharts({ data }: { data: DashboardCharts }) {
         </div>
         <SplitBarChart
           ariaLabel="Members vs paid subscribers by month"
-          series={months.map((row) => ({
+          series={growthMonths.map((row) => ({
             label: row.month,
             left: row.members,
             right: row.paid,
@@ -108,12 +125,12 @@ export function OverviewCharts({ data }: { data: DashboardCharts }) {
           <div>
             <h2 className="font-display text-sm font-semibold text-ink">Income</h2>
             <p className="mt-0.5 text-xs text-muted">
-              {Number(year) === new Date().getFullYear()
+              {Number(incomeYear) === new Date().getFullYear()
                 ? 'Subscription revenue year to date'
                 : 'Subscription revenue collected this year'}
             </p>
           </div>
-          <YearSelect />
+          <YearSelect label="Income year" value={incomeYear} years={data.years} onChange={setIncomeYear} />
         </div>
         <div className="mb-4 mt-3">
           <p className="font-display text-[26px] font-semibold leading-none tracking-tight tabular-nums">
@@ -122,15 +139,15 @@ export function OverviewCharts({ data }: { data: DashboardCharts }) {
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <Delta value={incomeDelta} />
             <span className="text-xs text-muted">
-              vs last month · {formatUsd(last?.income ?? 0)} in {last?.month}
+              vs last month · {formatUsd(lastIncome?.income ?? 0)} in {lastIncome?.month}
             </span>
           </div>
         </div>
         <AreaChart
           ariaLabel="Monthly subscription income"
           fillId="selunaIncomeFill"
-          values={months.map((row) => row.income)}
-          labels={months.map((row) => row.month)}
+          values={incomeMonths.map((row) => row.income)}
+          labels={incomeMonths.map((row) => row.month)}
           formatY={axisUsd}
         />
       </Card>

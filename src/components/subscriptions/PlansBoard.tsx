@@ -37,10 +37,7 @@ export function PlansBoard() {
           {data.map((plan) => {
             const count = subscribers.filter((s) => s.planId === plan.id && s.status === 'active').length
             return (
-              <div
-                key={plan.id}
-                className={`rounded-2xl border border-line bg-white p-5 ${plan.featured ? 'ring-1 ring-primary-200' : ''}`}
-              >
+              <div key={plan.id} className="rounded-2xl border border-line bg-white p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-display text-sm font-semibold text-ink">{plan.name}</p>
