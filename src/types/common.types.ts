@@ -1,0 +1,7 @@
+export type Role = 'admin' | 'support'
+export type UserStatus = 'active' | 'pending' | 'suspended' | 'banned'
+export type SubStatus = 'active' | 'cancelled' | 'pending' | 'expired'
+export type ReportStatus = 'pending' | 'reviewing' | 'resolved' | 'dismissed'
+export type EventStatus = 'upcoming' | 'live' | 'ended' | 'cancelled'
+export type TripVisibility = 'public' | 'hidden'
+export type VenueKind = 'cafe' | 'restaurant' | 'hotel'
