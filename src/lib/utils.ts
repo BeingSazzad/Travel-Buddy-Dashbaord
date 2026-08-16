@@ -10,6 +10,15 @@ export function formatUsd(value: number) {
   }).format(value)
 }
 
+export function formatEur(value: number) {
+  return new Intl.NumberFormat('en-IE', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value)
+}
+
 export function formatCompact(value: number) {
   return new Intl.NumberFormat('en-US', { notation: 'compact' }).format(value)
 }
@@ -18,6 +27,18 @@ export function labelize(value: string | null | undefined) {
   const text = String(value ?? '').replace(/_/g, ' ').trim()
   if (!text) return '—'
   return text.charAt(0).toUpperCase() + text.slice(1)
+}
+
+export function audienceLabel(value: string) {
+  if (value === 'all') return 'All members'
+  if (value === 'subscribers') return 'Subscribers'
+  if (value === 'admins') return 'Admins'
+  return labelize(value)
+}
+
+export function venueKindLabel(kind: string) {
+  if (kind === 'cafe') return 'Café'
+  return labelize(kind)
 }
 
 export function formatDisplayDate(value: string) {

@@ -1,5 +1,6 @@
 import { Button } from './Button'
 import { Icon } from './Icon'
+import { cn } from '@/lib/utils'
 import type { ReactNode } from 'react'
 
 type Props = {
@@ -8,14 +9,15 @@ type Props = {
   children: ReactNode
   onClose: () => void
   footer?: ReactNode
+  className?: string
 }
 
-export function Modal({ open, title, children, onClose, footer }: Props) {
+export function Modal({ open, title, children, onClose, footer, className }: Props) {
   if (!open) return null
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
       <button className="absolute inset-0 bg-ink/40 backdrop-blur-[2px]" aria-label="Close" onClick={onClose} />
-      <div className="relative w-full max-w-md rounded-2xl border border-line bg-white p-6 shadow-[0_24px_64px_rgba(44,34,23,0.18)]">
+      <div className={cn('relative w-full max-w-md rounded-2xl border border-line bg-white p-6 shadow-[0_24px_64px_rgba(13,20,37,0.18)]', className)}>
         <div className="mb-5 flex items-start justify-between gap-4">
           <h2 className="font-display text-lg font-semibold">{title}</h2>
           <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close" className="h-9 w-9 px-0">

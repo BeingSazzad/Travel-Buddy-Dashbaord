@@ -4,7 +4,7 @@ import { ReviewsTable } from '@/components/reviews/ReviewsTable'
 export function ReviewsPage() {
   return (
     <div>
-      <PageHeader title="Reviews" description="Place reviews and flagged content." />
+      <PageHeader title="Reviews" description="Place notes — flag anything that shouldn’t stay live." />
       <ReviewsTable />
     </div>
   )

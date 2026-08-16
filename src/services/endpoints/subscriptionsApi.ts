@@ -1,13 +1,26 @@
 import { api } from '../api'
-import { subscriptionsStore, type Subscription } from '@/lib/subscriptionsStore'
+import { subscribersStore, type Subscriber } from '@/lib/subscribersStore'
+
+export type { Subscriber }
 
 export const subscriptionsApi = api.injectEndpoints({
   endpoints: (build) => ({
-    getSubscriptions: build.query<Subscription[], void>({
-      queryFn: async () => ({ data: subscriptionsStore.list() }),
+    getSubscribers: build.query<Subscriber[], void>({
+      queryFn: async () => ({ data: subscribersStore.list() }),
       providesTags: ['Subscriptions'],
+    }),
+    saveSubscriber: build.mutation<Subscriber, Subscriber>({
+      queryFn: async (row) => ({ data: subscribersStore.save(row) }),
+      invalidatesTags: ['Subscriptions', 'Users', 'Metrics'],
+    }),
+    removeSubscriber: build.mutation<null, string>({
+      queryFn: async (id) => {
+        subscribersStore.remove(id)
+        return { data: null }
+      },
+      invalidatesTags: ['Subscriptions', 'Users', 'Metrics'],
     }),
   }),
 })
 
-export const { useGetSubscriptionsQuery } = subscriptionsApi
+export const { useGetSubscribersQuery, useSaveSubscriberMutation, useRemoveSubscriberMutation } = subscriptionsApi

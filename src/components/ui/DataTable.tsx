@@ -24,7 +24,7 @@ export function DataTable<T>({
   columns,
   rows,
   rowKey,
-  empty = 'No records',
+  empty = 'Nothing to show.',
   sortKey,
   sortDir,
   onSort,
@@ -39,9 +39,9 @@ export function DataTable<T>({
     <div className="overflow-x-auto">
       <table className="w-full min-w-[720px] text-left text-sm">
         <thead>
-          <tr className="border-b border-line bg-[#faf7f3] text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
+          <tr className="border-b border-line bg-[#f7f8fb] text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
             {columns.map((col) => (
-              <th key={col.key} className={`${head} font-semibold ${col.key === 'actions' ? 'text-right' : 'text-left'}`}>
+              <th key={col.key} className={`${head} font-semibold ${col.key === 'actions' ? 'w-[120px] text-right' : 'text-left'}`}>
                 {col.sortable && onSort ? (
                   <button type="button" className="inline-flex items-center gap-1" onClick={() => onSort(col.key)}>
                     {col.header}
@@ -70,7 +70,7 @@ export function DataTable<T>({
               return (
                 <tr
                   key={id}
-                  className={`border-b border-line/80 last:border-0 transition-colors hover:bg-[#faf7f3] ${onRowClick ? 'cursor-pointer' : ''}`}
+                  className={`border-b border-line/80 last:border-0 transition-colors hover:bg-[#f7f9fc] ${onRowClick ? 'cursor-pointer' : ''}`}
                   onClick={onRowClick ? () => onRowClick(row) : undefined}
                 >
                   {columns.map((col) => (

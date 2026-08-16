@@ -22,7 +22,7 @@ const groups: Array<{ title: string; items: NavItem[] }> = [
   {
     title: 'Community',
     items: [
-      { to: ROUTES.users, label: 'Users', icon: 'people' },
+      { to: ROUTES.users, label: 'Members', icon: 'people' },
       { to: ROUTES.trips, label: 'Trips', icon: 'trips' },
       { to: ROUTES.events, label: 'Events', icon: 'events' },
       { to: ROUTES.reports, label: 'Reports', icon: 'reports' },
@@ -41,6 +41,9 @@ const groups: Array<{ title: string; items: NavItem[] }> = [
     title: 'Admin',
     items: [
       { to: ROUTES.subscriptions, label: 'Subscriptions', icon: 'subscriptions' },
+      { to: ROUTES.subscribers, label: 'Subscribers', icon: 'user' },
+      { to: ROUTES.cms, label: 'CMS', icon: 'cms' },
+      { to: ROUTES.broadcast, label: 'Broadcast', icon: 'megaphone' },
       { to: ROUTES.notifications, label: 'Notifications', icon: 'notifications' },
       { to: ROUTES.settings, label: 'Settings', icon: 'settings' },
     ],

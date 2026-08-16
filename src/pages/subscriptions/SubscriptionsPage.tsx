@@ -1,11 +1,14 @@
 import { PageHeader } from '@/components/layout/PageHeader'
-import { SubscriptionsTable } from '@/components/subscriptions/SubscriptionsTable'
+import { PlansBoard } from '@/components/subscriptions/PlansBoard'
 
 export function SubscriptionsPage() {
   return (
     <div>
-      <PageHeader title="Subscriptions" description="Paying members and renewal dates." />
-      <SubscriptionsTable />
+      <PageHeader
+        title="Subscriptions"
+        description="Plans for sale. People on a plan live under Subscribers."
+      />
+      <PlansBoard />
     </div>
   )
 }

@@ -1,5 +1,5 @@
 export type Role = 'admin' | 'support'
-export type UserStatus = 'active' | 'pending' | 'suspended' | 'banned'
+export type UserStatus = 'active' | 'pending' | 'banned'
 export type SubStatus = 'active' | 'cancelled' | 'pending' | 'expired'
 export type ReportStatus = 'pending' | 'reviewing' | 'resolved' | 'dismissed'
 export type EventStatus = 'upcoming' | 'live' | 'ended' | 'cancelled'

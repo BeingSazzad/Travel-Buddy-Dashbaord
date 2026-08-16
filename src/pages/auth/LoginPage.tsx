@@ -28,7 +28,7 @@ export function LoginPage() {
         </div>
       </aside>
       <div className="relative flex items-center justify-center bg-surface p-6 sm:p-10">
-        <div className="relative w-full max-w-[400px] rounded-2xl border border-line bg-white/95 p-8 shadow-[0_24px_60px_rgba(44,34,23,0.12)]">
+        <div className="relative w-full max-w-[400px] rounded-2xl border border-line bg-white/95 p-8 shadow-[0_24px_60px_rgba(13,20,37,0.12)]">
           <div className="mb-7 lg:hidden">
             <BrandLogo size="sm" tone="dark" />
             <p className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-muted">Admin Dashboard</p>

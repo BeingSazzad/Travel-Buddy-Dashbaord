@@ -8,11 +8,14 @@ import { tripsStore } from '@/lib/tripsStore'
 import { eventsStore } from '@/lib/eventsStore'
 import { destinationsStore } from '@/lib/destinationsStore'
 import { reportsStore } from '@/lib/reportsStore'
-import { subscriptionsStore } from '@/lib/subscriptionsStore'
+import { plansStore } from '@/lib/plansStore'
+import { subscribersStore } from '@/lib/subscribersStore'
 import { reviewsStore } from '@/lib/reviewsStore'
 import { dealsStore } from '@/lib/dealsStore'
 import { venuesStore } from '@/lib/venuesStore'
 import { notificationsStore } from '@/lib/notificationsStore'
+import { cmsStore } from '@/lib/cmsStore'
+import { broadcastsStore } from '@/lib/broadcastsStore'
 import App from './App'
 import '@/styles/index.css'
 
@@ -22,11 +25,14 @@ tripsStore.list()
 eventsStore.list()
 destinationsStore.list()
 reportsStore.list()
-subscriptionsStore.list()
+plansStore.list()
+subscribersStore.list()
 reviewsStore.list()
 dealsStore.list()
 venuesStore.list()
 notificationsStore.list()
+cmsStore.list()
+broadcastsStore.list()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

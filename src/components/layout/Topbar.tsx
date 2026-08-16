@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { Icon } from '@/components/ui/Icon'
 import { Avatar } from '@/components/shared/Avatar'
+import { personPhoto } from '@/lib/photos'
 import { useGetNotificationsQuery } from '@/services/endpoints/notificationsApi'
 import { useAppSelector } from '@/store/hooks'
 import { ROUTES } from '@/constants/routes'
@@ -29,7 +30,7 @@ export function Topbar() {
             {unread ? <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-primary-500" /> : null}
           </NavLink>
           <NavLink to={ROUTES.settings} aria-label="Open profile settings">
-            <Avatar name={user?.name ?? 'Admin'} image={user?.avatar} />
+            <Avatar name={user?.name ?? 'Admin'} image={user?.avatar || personPhoto(user?.id ?? 'admin')} />
           </NavLink>
         </div>
       </div>

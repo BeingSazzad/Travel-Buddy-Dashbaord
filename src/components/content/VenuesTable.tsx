@@ -5,7 +5,9 @@ import { Badge } from '@/components/shared/Badge'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { Pagination } from '@/components/shared/Pagination'
 import { RowMenu } from '@/components/shared/RowMenu'
+import { PlaceChip } from '@/components/shared/EntityChip'
 import { useTableState } from '@/hooks/useTableState'
+import { venueKindLabel } from '@/lib/utils'
 import { useGetVenuesQuery, useToggleVenueFeaturedMutation } from '@/services/endpoints/venuesApi'
 import type { Venue } from '@/lib/venuesStore'
 
@@ -21,6 +23,7 @@ export function VenuesTable() {
       <FilterBar
         search={table.search}
         onSearch={table.setSearch}
+        placeholder="Search venues…"
         filters={[
           {
             key: 'kind',
@@ -42,14 +45,23 @@ export function VenuesTable() {
       <DataTable
         rows={table.paged}
         rowKey={(r) => r.id}
+        empty="No venues match these filters."
         sortKey={table.sortKey}
         sortDir={table.sortDir}
         onSort={table.onSort}
         columns={[
-          { key: 'name', header: 'Venue', sortable: true, render: (r) => <span className="font-medium">{r.name}</span> },
-          { key: 'kind', header: 'Type', render: (r) => r.kind },
+          {
+            key: 'name',
+            header: 'Venue',
+            sortable: true,
+            render: (r) => <PlaceChip id={r.id} title={r.name} subtitle={`${venueKindLabel(r.kind)} · ${r.city}`} city={r.city} />,
+          },
           { key: 'city', header: 'City', render: (r) => r.city },
-          { key: 'featured', header: 'Featured', render: (r) => <Badge tone={r.featured ? 'info' : 'neutral'}>{r.featured ? 'Yes' : 'No'}</Badge> },
+          {
+            key: 'featured',
+            header: 'Featured',
+            render: (r) => <Badge tone={r.featured ? 'info' : 'neutral'}>{r.featured ? 'Yes' : 'No'}</Badge>,
+          },
           {
             key: 'actions',
             header: '',

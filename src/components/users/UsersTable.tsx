@@ -7,9 +7,12 @@ import { PersonChip } from '@/components/shared/EntityChip'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { Pagination } from '@/components/shared/Pagination'
 import { RowMenu } from '@/components/shared/RowMenu'
+import { ConfirmAction } from '@/components/shared/ConfirmAction'
 import { userPath } from '@/constants/routes'
 import { useTableState } from '@/hooks/useTableState'
 import { useGetUsersQuery, useSetUserStatusMutation, type AdminUser } from '@/services/endpoints/usersApi'
+import { useGetSubscribersQuery } from '@/services/endpoints/subscriptionsApi'
+import { useGetPlansQuery } from '@/services/endpoints/plansApi'
 
 function searchPerson(p: AdminUser) {
   return `${p.name} ${p.email} ${p.city} ${p.status}`
@@ -24,8 +27,11 @@ function statusTone(s: AdminUser['status']) {
 export function UsersTable() {
   const navigate = useNavigate()
   const { data = [] } = useGetUsersQuery()
+  const { data: subscribers = [] } = useGetSubscribersQuery()
+  const { data: plans = [] } = useGetPlansQuery()
   const [setStatus] = useSetUserStatusMutation()
   const [status, setStatusFilter] = useState('all')
+  const [banning, setBanning] = useState<AdminUser | null>(null)
   const scoped = useMemo(() => data.filter((p) => status === 'all' || p.status === status), [data, status])
   const table = useTableState(scoped, searchPerson, 'name')
 
@@ -34,6 +40,7 @@ export function UsersTable() {
       <FilterBar
         search={table.search}
         onSearch={table.setSearch}
+        placeholder="Search members…"
         filters={[
           {
             key: 'status',
@@ -47,7 +54,6 @@ export function UsersTable() {
               { value: 'all', label: 'All' },
               { value: 'active', label: 'Active' },
               { value: 'pending', label: 'Pending' },
-              { value: 'suspended', label: 'Suspended' },
               { value: 'banned', label: 'Banned' },
             ],
           },
@@ -56,16 +62,36 @@ export function UsersTable() {
       <DataTable
         rows={table.paged}
         rowKey={(r) => r.id}
+        empty="No members match these filters."
         sortKey={table.sortKey}
         sortDir={table.sortDir}
         onSort={table.onSort}
         onRowClick={(r) => navigate(userPath(r.id))}
         columns={[
-          { key: 'name', header: 'Member', sortable: true, render: (r) => <PersonChip name={r.name} /> },
+          {
+            key: 'name',
+            header: 'Member',
+            sortable: true,
+            render: (r) => <PersonChip id={r.id} name={r.name} verified={r.verified} />,
+          },
           { key: 'email', header: 'Email', render: (r) => r.email },
           { key: 'city', header: 'City', sortable: true, render: (r) => `${r.city}, ${r.country}` },
           { key: 'status', header: 'Status', render: (r) => <Badge tone={statusTone(r.status)}>{r.status}</Badge> },
-          { key: 'subscription', header: 'Plan', render: (r) => <Badge tone={r.subscription === 'active' ? 'info' : 'neutral'}>{r.subscription}</Badge> },
+          {
+            key: 'subscription',
+            header: 'Subscriber',
+            render: (r) => {
+              const sub = subscribers.find((s) => s.memberId === r.id)
+              if (!sub) return <span className="text-muted">—</span>
+              const plan = plans.find((p) => p.id === sub.planId)
+              return (
+                <span className="inline-flex items-center gap-2">
+                  <span className="text-sm">{plan?.name ?? 'Plan'}</span>
+                  <Badge tone={sub.status === 'active' ? 'success' : 'neutral'}>{sub.status}</Badge>
+                </span>
+              )
+            },
+          },
           {
             key: 'actions',
             header: '',
@@ -73,8 +99,9 @@ export function UsersTable() {
               <RowMenu
                 items={[
                   { label: 'View', onClick: () => navigate(userPath(r.id)) },
-                  { label: 'Suspend', onClick: () => setStatus({ id: r.id, status: 'suspended' }) },
-                  { label: 'Ban', danger: true, onClick: () => setStatus({ id: r.id, status: 'banned' }) },
+                  ...(r.status === 'banned'
+                    ? [{ label: 'Activate', onClick: () => setStatus({ id: r.id, status: 'active' as const }) }]
+                    : [{ label: 'Ban', danger: true, onClick: () => setBanning(r) }]),
                 ]}
               />
             ),
@@ -82,6 +109,19 @@ export function UsersTable() {
         ]}
       />
       <Pagination page={table.page} pages={table.pages} total={table.total} onPage={table.setPage} />
+
+      <ConfirmAction
+        open={Boolean(banning)}
+        title="Ban this member?"
+        body={`${banning?.name ?? 'This member'} will lose access to the app. You can activate the account again later.`}
+        confirmLabel="Ban"
+        danger
+        onClose={() => setBanning(null)}
+        onConfirm={() => {
+          if (banning) void setStatus({ id: banning.id, status: 'banned' })
+          setBanning(null)
+        }}
+      />
     </Card>
   )
 }

@@ -11,11 +11,14 @@ export const ROUTES = {
   destinations: '/destinations',
   reports: '/reports',
   subscriptions: '/subscriptions',
+  subscribers: '/subscribers',
   reviews: '/reviews',
   deals: '/deals',
   content: '/content',
   notifications: '/notifications',
   settings: '/settings',
+  cms: '/cms',
+  broadcast: '/broadcast',
 } as const
 
 export function userPath(id: string) {

@@ -13,7 +13,7 @@ export function ForgotPasswordPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-surface p-6">
-      <div className="w-full max-w-[400px] rounded-2xl border border-line bg-white p-8 shadow-[0_24px_60px_rgba(44,34,23,0.12)]">
+      <div className="w-full max-w-[400px] rounded-2xl border border-line bg-white p-8 shadow-[0_24px_60px_rgba(13,20,37,0.12)]">
         <BrandLogo size="sm" tone="dark" />
         <p className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-muted">Admin Dashboard</p>
         <p className="mt-6 font-display text-xl font-semibold tracking-tight">Forgot password</p>

@@ -13,7 +13,7 @@ type Props = {
 export function KpiCard({ label, value, delta, hint, spark }: Props) {
   const up = (delta ?? 0) >= 0
   return (
-    <div className="rounded-2xl border border-line bg-white p-5 shadow-[0_10px_28px_rgba(44,34,23,0.045)]">
+    <div className="rounded-2xl border border-line bg-white p-5 shadow-[0_10px_28px_rgba(13,20,37,0.045)]">
       <p className="text-xs font-medium text-muted">{label}</p>
       <div className="mt-3 flex items-end justify-between gap-3">
         <p className="font-display text-[28px] font-semibold leading-none tracking-tight text-ink">{value}</p>

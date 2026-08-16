@@ -6,6 +6,7 @@ import {
   ArrowUpDown,
   Ban,
   Bell,
+  Bold,
   CalendarHeart,
   Check,
   ChevronDown,
@@ -13,17 +14,24 @@ import {
   ChevronRight,
   CircleUser,
   CreditCard,
+  Eye,
+  EyeOff,
   FileText,
   Flag,
+  Italic,
   LayoutDashboard,
+  List,
   Lock,
   LogIn,
   LogOut,
   Mail,
   MapPin,
+  Megaphone,
   MoreHorizontal,
+  Pencil,
   Plane,
   Plus,
+  Save,
   Search,
   Send,
   Settings,
@@ -32,6 +40,7 @@ import {
   Star,
   Tag,
   Trash2,
+  Underline,
   Users,
   X,
 } from 'lucide-react'
@@ -74,6 +83,16 @@ export type IconName =
   | 'send'
   | 'sparkles'
   | 'shield'
+  | 'cms'
+  | 'save'
+  | 'megaphone'
+  | 'bold'
+  | 'italic'
+  | 'underline'
+  | 'list'
+  | 'eye'
+  | 'eyeOff'
+  | 'edit'
 
 const icons: Record<IconName, LucideIcon> = {
   overview: LayoutDashboard,
@@ -113,6 +132,16 @@ const icons: Record<IconName, LucideIcon> = {
   send: Send,
   sparkles: Sparkles,
   shield: Shield,
+  cms: FileText,
+  save: Save,
+  megaphone: Megaphone,
+  bold: Bold,
+  italic: Italic,
+  underline: Underline,
+  list: List,
+  eye: Eye,
+  eyeOff: EyeOff,
+  edit: Pencil,
 }
 
 export function Icon({
@@ -127,4 +156,18 @@ export function Icon({
   const Cmp = icons[name]
   if (!Cmp) return null
   return <Cmp className={className} strokeWidth={strokeWidth} aria-hidden />
+}
+
+export function menuIcon(label: string): IconName {
+  const l = label.toLowerCase()
+  if (l.includes('view') || l.includes('open') || l.includes('review')) return 'eye'
+  if (l.includes('hide') || l.includes('unfeature') || l.includes('turn off')) return 'eyeOff'
+  if (l.includes('show') || l.includes('feature') || l.includes('turn on') || l.includes('public')) return 'eye'
+  if (l.includes('ban')) return 'ban'
+  if (l.includes('remove') || l.includes('delete')) return 'trash'
+  if (l.includes('flag')) return 'reports'
+  if (l.includes('edit')) return 'edit'
+  if (l.includes('activate') || l.includes('resolve') || l.includes('approve') || l.includes('clear')) return 'check'
+  if (l.includes('close') || l.includes('dismiss') || l.includes('cancel')) return 'close'
+  return 'more'
 }

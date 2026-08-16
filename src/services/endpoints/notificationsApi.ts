@@ -11,7 +11,16 @@ export const notificationsApi = api.injectEndpoints({
       queryFn: async (id) => ({ data: notificationsStore.patch(id, { read: true }) }),
       invalidatesTags: ['Notifications'],
     }),
+    markAllRead: build.mutation<boolean, void>({
+      queryFn: async () => {
+        notificationsStore.list().forEach((n) => {
+          if (!n.read) notificationsStore.patch(n.id, { read: true })
+        })
+        return { data: true }
+      },
+      invalidatesTags: ['Notifications'],
+    }),
   }),
 })
 
-export const { useGetNotificationsQuery, useMarkReadMutation } = notificationsApi
+export const { useGetNotificationsQuery, useMarkReadMutation, useMarkAllReadMutation } = notificationsApi
