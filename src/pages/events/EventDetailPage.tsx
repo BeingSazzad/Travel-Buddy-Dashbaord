@@ -70,10 +70,17 @@ export function EventDetailPage() {
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="space-y-4">
+      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="space-y-6">
           <Card padding={false} className="overflow-hidden">
-            <img src={cityHero(data.city)} alt="" className="h-56 w-full object-cover sm:h-72" />
+            <img
+              src={cityHero(data.city)}
+              alt={data.title}
+              className="h-56 w-full object-cover sm:h-72 bg-slate-200"
+              onError={(e) => {
+                e.currentTarget.src = 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80'
+              }}
+            />
             <div className="space-y-4 p-6">
               <div className="flex flex-wrap gap-2">
                 <Badge tone={tone(data.status)}>{data.status}</Badge>
@@ -83,23 +90,9 @@ export function EventDetailPage() {
             </div>
           </Card>
 
-          <Card>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Agenda</p>
-            <ol className="mt-4 space-y-4">
-              {(data.agenda ?? []).map((stop) => (
-                <li key={`${stop.time}-${stop.title}`} className="flex gap-3">
-                  <span className="mt-0.5 w-14 shrink-0 text-xs font-semibold text-muted">{stop.time}</span>
-                  <div>
-                    <p className="font-medium text-ink">{stop.title}</p>
-                    <p className="mt-0.5 text-sm text-muted">{stop.detail}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </Card>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <Card>
             <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Event details</p>
             <dl className="mt-4 grid gap-4">
@@ -110,13 +103,13 @@ export function EventDetailPage() {
                 </dd>
               </div>
               <div>
-                <dt className="text-sm text-muted">Venue</dt>
-                <dd className="mt-0.5 font-medium text-ink">{data.venue}</dd>
+                <dt className="text-sm text-muted">Venue & Location</dt>
+                <dd className="mt-0.5 font-medium text-ink">{data.venue}, {data.city}</dd>
               </div>
               <div>
-                <dt className="text-sm text-muted">RSVPs</dt>
+                <dt className="text-sm text-muted">RSVPs & Capacity</dt>
                 <dd className="mt-0.5 font-medium text-ink">
-                  {data.attendees} of {data.capacity} spots
+                  {data.attendees} of {data.capacity} spots filled
                 </dd>
               </div>
               <div>
@@ -127,16 +120,20 @@ export function EventDetailPage() {
           </Card>
 
           <Card>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Host</p>
-            <div className="mt-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Organised by</p>
+            <div className="mt-3 flex items-center justify-between">
               <PersonChip name={data.host} size="md" />
+              <span className="rounded-full bg-primary-50 px-2.5 py-1 text-xs font-semibold text-primary-700">Organiser (Host)</span>
             </div>
           </Card>
 
           <Card>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Guests</p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Confirmed Attendees</p>
+              <span className="text-xs font-semibold text-muted">{(data.guests ?? []).length} Attending</span>
+            </div>
             {(data.guests ?? []).length > 0 ? (
-              <ul className="mt-3 space-y-2.5">
+              <ul className="space-y-2.5">
                 {data.guests.map((name) => (
                   <li key={name}>
                     <PersonChip name={name} />
@@ -144,14 +141,10 @@ export function EventDetailPage() {
                 ))}
               </ul>
             ) : (
-              <p className="mt-3 text-sm text-muted">No named guests yet.</p>
+              <p className="text-sm text-muted">No confirmed guests yet.</p>
             )}
           </Card>
 
-          <Card>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Admin notes</p>
-            <p className="mt-3 text-sm leading-6 text-ink">{data.notes}</p>
-          </Card>
         </div>
       </div>
 

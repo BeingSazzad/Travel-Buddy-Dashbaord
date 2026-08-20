@@ -8,7 +8,10 @@ export function DashboardPage() {
   const { data } = useGetDashboardMetricsQuery()
   return (
     <div>
-      <PageHeader title="Dashboard" description="Live snapshot of the Seluna community." />
+      <PageHeader
+        title="Dashboard"
+        description="Live snapshot of the Seluna community."
+      />
       {data ? (
         <>
           <MetricsGrid data={data} />

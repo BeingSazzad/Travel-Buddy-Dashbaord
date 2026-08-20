@@ -122,8 +122,6 @@ const store = createStore<Meetup>(EVENTS_STORAGE_KEY, [
   },
 ])
 
-])
-
 function normalizeEvent(row: Meetup): Meetup {
   return {
     ...row,

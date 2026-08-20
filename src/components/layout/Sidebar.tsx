@@ -40,7 +40,6 @@ const groups: Array<{ title: string; items: NavItem[] }> = [
     title: 'Admin',
     items: [
       { to: ROUTES.subscriptions, label: 'Subscriptions', icon: 'subscriptions' },
-      { to: ROUTES.subscribers, label: 'Subscribers', icon: 'user' },
       { to: ROUTES.transactions, label: 'Transactions', icon: 'transactions' },
       { to: ROUTES.cms, label: 'CMS', icon: 'cms' },
       { to: ROUTES.broadcast, label: 'Broadcast', icon: 'megaphone' },

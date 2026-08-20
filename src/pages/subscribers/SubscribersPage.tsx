@@ -1,14 +1,6 @@
-import { PageHeader } from '@/components/layout/PageHeader'
-import { SubscribersTable } from '@/components/subscriptions/SubscribersTable'
+import { Navigate } from 'react-router-dom'
+import { ROUTES } from '@/constants/routes'
 
 export function SubscribersPage() {
-  return (
-    <div>
-      <PageHeader
-        title="Subscribers"
-        description="Members on a plan. Edit the plans themselves under Subscriptions."
-      />
-      <SubscribersTable />
-    </div>
-  )
+  return <Navigate to={ROUTES.users} replace />
 }

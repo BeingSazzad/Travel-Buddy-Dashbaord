@@ -155,11 +155,9 @@ const store = createStore<Trip>(TRIPS_STORAGE_KEY, [
       { day: 2, title: 'Hike & sauna', detail: 'Coastal trail, then a public sauna by the water.' },
       { day: 3, title: 'Return', detail: 'Morning ferry back to Oslo.' },
     ],
-    companions: [],
+    companions: ['Elena Rossi', 'Marcus Vance'],
     notes: 'Hidden by host. Do not surface in the public trip feed until she turns visibility on.',
   },
-])
-
 ])
 
 function normalizeTrip(row: Trip): Trip {

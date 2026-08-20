@@ -14,6 +14,7 @@ import {
   ChevronRight,
   CircleUser,
   CreditCard,
+  Download,
   Eye,
   EyeOff,
   FileText,
@@ -95,6 +96,8 @@ export type IconName =
   | 'eye'
   | 'eyeOff'
   | 'edit'
+  | 'star'
+  | 'download'
 
 const icons: Record<IconName, LucideIcon> = {
   overview: LayoutDashboard,
@@ -145,6 +148,8 @@ const icons: Record<IconName, LucideIcon> = {
   eye: Eye,
   eyeOff: EyeOff,
   edit: Pencil,
+  star: Star,
+  download: Download,
 }
 
 export function Icon({

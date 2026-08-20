@@ -15,11 +15,29 @@ export type StaffMember = {
 const store = createStore<StaffMember>(STAFF_STORAGE_KEY, [
   {
     id: 'adm-1',
-    name: 'Seluna Admin',
+    name: 'Sazzad Hossain',
     email: 'admin@seluna.app',
     role: 'admin',
     password: 'admin123',
-    createdAt: '2026-07-01',
+    createdAt: '2026-06-01',
+    avatar: '',
+  },
+  {
+    id: 'adm-2',
+    name: 'Clara Nielsen',
+    email: 'clara@seluna.app',
+    role: 'admin',
+    password: 'admin123',
+    createdAt: '2026-06-15',
+    avatar: '',
+  },
+  {
+    id: 'adm-3',
+    name: 'Amelia Hart',
+    email: 'amelia@seluna.app',
+    role: 'admin',
+    password: 'admin123',
+    createdAt: '2026-07-10',
     avatar: '',
   },
 ])
@@ -27,6 +45,24 @@ const store = createStore<StaffMember>(STAFF_STORAGE_KEY, [
 export const staffStore = {
   list: store.list,
   get: store.get,
+  addAdmin(name: string, email: string, role: Role = 'admin') {
+    const cleanEmail = email.trim().toLowerCase()
+    const existing = this.findByEmail(cleanEmail)
+    if (existing) return { error: 'Admin with this email already exists.' as const }
+    const newAdmin: StaffMember = {
+      id: `adm-${Date.now()}`,
+      name: name.trim(),
+      email: cleanEmail,
+      role,
+      password: 'admin123',
+      createdAt: new Date().toISOString().slice(0, 10),
+      avatar: '',
+    }
+    return { data: store.patch(newAdmin.id, newAdmin) }
+  },
+  removeAdmin(id: string) {
+    return store.remove(id)
+  },
   findByEmail(email: string) {
     return store.list().find((s) => s.email.toLowerCase() === email.toLowerCase()) ?? null
   },

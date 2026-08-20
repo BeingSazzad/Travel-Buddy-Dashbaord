@@ -7,8 +7,12 @@ import { Avatar } from '@/components/shared/Avatar'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Icon } from '@/components/ui/Icon'
+import { Modal } from '@/components/ui/Modal'
+import { ConfirmAction } from '@/components/shared/ConfirmAction'
 import { Tabs } from '@/components/shared/Tabs'
 import { personPhoto } from '@/lib/photos'
+import { formatDisplayDate } from '@/lib/utils'
+import { staffStore, type StaffMember } from '@/lib/staffStore'
 import { useAuth } from '@/hooks/useAuth'
 import { useAppDispatch } from '@/store/hooks'
 import { setUser } from '@/components/auth/authSlice'
@@ -41,6 +45,14 @@ export function SettingsPage() {
   const [passwordMsg, setPasswordMsg] = useState('')
   const [passwordError, setPasswordError] = useState('')
 
+  // Admin Team States
+  const [adminList, setAdminList] = useState(() => staffStore.list())
+  const [showAddAdmin, setShowAddAdmin] = useState(false)
+  const [newAdminName, setNewAdminName] = useState('')
+  const [newAdminEmail, setNewAdminEmail] = useState('')
+  const [addAdminError, setAddAdminError] = useState('')
+  const [revokingAdmin, setRevokingAdmin] = useState<StaffMember | null>(null)
+
   const [updateProfile, { isLoading: savingProfile }] = useUpdateProfileMutation()
   const [changePassword, { isLoading: savingPassword }] = useChangePasswordMutation()
   const [logout] = useLogoutMutation()
@@ -60,10 +72,11 @@ export function SettingsPage() {
         items={[
           { id: 'profile', label: 'Profile', icon: 'user' },
           { id: 'password', label: 'Password', icon: 'lock' },
+          { id: 'team', label: 'Admin Team & Roles', icon: 'people' },
         ]}
       />
 
-      <div className="max-w-xl space-y-4">
+      <div className="max-w-2xl space-y-6">
         {tab === 'profile' ? (
           <Card>
             <div className="mb-5 flex items-center gap-4">
@@ -106,9 +119,9 @@ export function SettingsPage() {
               {profileError ? <p className="text-sm text-rose-600">{profileError}</p> : null}
             </form>
           </Card>
-        ) : (
+        ) : tab === 'password' ? (
           <Card>
-            <p className="text-sm text-muted">Change the password you use to sign in to this demo admin.</p>
+            <p className="text-sm text-muted">Change the password you use to sign in to this admin workspace.</p>
             <form
               className="mt-5 space-y-4"
               onSubmit={async (e) => {
@@ -161,6 +174,55 @@ export function SettingsPage() {
               {passwordError ? <p className="text-sm text-rose-600">{passwordError}</p> : null}
             </form>
           </Card>
+        ) : (
+          /* Admin Team & Access Control Tab */
+          <div className="space-y-6">
+            <Card>
+              <div className="flex items-center justify-between border-b border-line pb-4 mb-5">
+                <div>
+                  <h3 className="text-base font-semibold text-ink">Admin Team Members</h3>
+                  <p className="text-xs text-muted">Manage administrators with access to Seluna Admin</p>
+                </div>
+                <Button size="sm" onClick={() => setShowAddAdmin(true)}>
+                  <Icon name="plus" className="mr-1.5 h-3.5 w-3.5" />
+                  Add New Admin
+                </Button>
+              </div>
+
+              <div className="divide-y divide-line/60">
+                {adminList.map((adm) => (
+                  <div key={adm.id} className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0">
+                    <div className="flex items-center gap-3">
+                      <Avatar name={adm.name} image={adm.avatar || personPhoto(adm.id)} size="md" />
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-semibold text-ink">{adm.name}</p>
+                          <Badge tone={adm.email === 'admin@seluna.app' ? 'success' : 'info'}>
+                            {adm.email === 'admin@seluna.app' ? 'Owner / Super Admin' : 'Admin'}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-muted">{adm.email} · Added {formatDisplayDate(adm.createdAt)}</p>
+                      </div>
+                    </div>
+
+                    {adm.email !== 'admin@seluna.app' ? (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 border-rose-200"
+                        onClick={() => setRevokingAdmin(adm)}
+                      >
+                        <Icon name="trash" className="h-3.5 w-3.5 mr-1" />
+                        Revoke Access
+                      </Button>
+                    ) : (
+                      <span className="text-xs font-semibold text-muted bg-surface px-2.5 py-1 rounded-md">Primary Account</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
         )}
 
         <Card>
@@ -181,6 +243,69 @@ export function SettingsPage() {
             Sign out
           </Button>
         </Card>
+
+        {/* Modal: Add New Admin */}
+        <Modal open={showAddAdmin} title="Add New Admin" onClose={() => setShowAddAdmin(false)}>
+          <form
+            className="space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault()
+              setAddAdminError('')
+              if (!newAdminName.trim() || !newAdminEmail.trim()) return
+              const res = staffStore.addAdmin(newAdminName, newAdminEmail)
+              if (res.error) {
+                setAddAdminError(res.error)
+                return
+              }
+              setAdminList(staffStore.list())
+              setNewAdminName('')
+              setNewAdminEmail('')
+              setShowAddAdmin(false)
+            }}
+          >
+            <Input
+              label="Full Name"
+              placeholder="e.g. Sarah Jenkins"
+              value={newAdminName}
+              onChange={(e) => setNewAdminName(e.target.value)}
+              required
+            />
+            <Input
+              label="Email Address"
+              type="email"
+              placeholder="e.g. sarah@seluna.app"
+              value={newAdminEmail}
+              onChange={(e) => setNewAdminEmail(e.target.value)}
+              required
+            />
+            {addAdminError ? <p className="text-xs text-rose-600">{addAdminError}</p> : null}
+            <div className="flex justify-end gap-2 pt-3 border-t border-line">
+              <Button variant="secondary" type="button" onClick={() => setShowAddAdmin(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">
+                Add Admin
+              </Button>
+            </div>
+          </form>
+        </Modal>
+
+        {/* Modal: Confirm Revoke Admin */}
+        <ConfirmAction
+          open={Boolean(revokingAdmin)}
+          title="Revoke Admin Access?"
+          body={`${revokingAdmin?.name} (${revokingAdmin?.email}) will no longer be able to log in to Seluna Admin.`}
+          confirmLabel="Revoke Access"
+          danger
+          onClose={() => setRevokingAdmin(null)}
+          onConfirm={() => {
+            if (revokingAdmin) {
+              staffStore.removeAdmin(revokingAdmin.id)
+              setAdminList(staffStore.list())
+            }
+            setRevokingAdmin(null)
+          }}
+        />
       </div>
     </div>
   )

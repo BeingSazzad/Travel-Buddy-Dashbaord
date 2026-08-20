@@ -1,14 +1,12 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
 import { DataTable } from '@/components/ui/DataTable'
 import { Badge } from '@/components/shared/Badge'
 import { PersonChip } from '@/components/shared/EntityChip'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { Pagination } from '@/components/shared/Pagination'
 import { RowMenu } from '@/components/shared/RowMenu'
-import { Icon } from '@/components/ui/Icon'
 import { userPath } from '@/constants/routes'
 import { formatDisplayDate, formatEur } from '@/lib/utils'
 import { useTableState } from '@/hooks/useTableState'
@@ -69,12 +67,6 @@ export function SubscribersTable() {
             ],
           },
         ]}
-        extra={
-          <Button size="sm" onClick={() => setEditing('new')}>
-            <Icon name="plus" className="h-4 w-4" />
-            Add subscriber
-          </Button>
-        }
       />
       <DataTable
         rows={table.paged}

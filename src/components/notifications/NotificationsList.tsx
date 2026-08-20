@@ -56,20 +56,24 @@ export function NotificationsList() {
       ) : (
         <div className="divide-y divide-line">
           {rows.map((n) => (
-            <div key={n.id} className="flex items-start justify-between gap-4 px-6 py-4">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-medium text-ink">{n.title}</p>
-                  <Badge tone={n.read ? 'neutral' : 'info'}>{n.read ? 'Read' : 'New'}</Badge>
-                  <Badge tone="neutral">{audienceLabel(n.audience)}</Badge>
+            <div key={n.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 py-4.5 transition-colors hover:bg-surface/50">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
+                  <p className="font-semibold text-ink text-sm sm:text-base">{n.title}</p>
+                  <div className="flex items-center gap-1.5">
+                    <Badge tone={n.read ? 'neutral' : 'info'}>{n.read ? 'Read' : 'New'}</Badge>
+                    <Badge tone="neutral">{audienceLabel(n.audience)}</Badge>
+                  </div>
                 </div>
-                <p className="mt-1 text-sm text-muted">{n.body}</p>
-                <p className="mt-2 text-xs text-muted">{formatDisplayDate(n.sentAt)}</p>
+                <p className="text-sm leading-relaxed text-muted line-clamp-2">{n.body}</p>
+                <p className="mt-2 text-xs font-medium text-muted/80">{formatDisplayDate(n.sentAt)}</p>
               </div>
               {!n.read ? (
-                <Button variant="secondary" size="sm" onClick={() => markRead(n.id)}>
-                  Mark read
-                </Button>
+                <div className="shrink-0 self-start sm:self-center">
+                  <Button variant="secondary" size="sm" onClick={() => markRead(n.id)}>
+                    Mark as read
+                  </Button>
+                </div>
               ) : null}
             </div>
           ))}

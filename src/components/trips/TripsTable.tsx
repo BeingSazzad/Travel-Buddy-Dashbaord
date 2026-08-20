@@ -42,7 +42,7 @@ export function TripsTable() {
       <FilterBar
         search={table.search}
         onSearch={table.setSearch}
-        placeholder="Search trips…"
+        placeholder="Search trips by destination, title or host…"
         filters={[
           {
             key: 'visibility',

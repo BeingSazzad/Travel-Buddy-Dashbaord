@@ -43,64 +43,57 @@ export function TripDetailPage() {
   const publicTrip = data.visibility === 'public'
 
   return (
-    <div>
-      <Link to={ROUTES.trips} className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink">
-        <Icon name="arrowLeft" className="h-4 w-4" />
-        Trips
-      </Link>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <Link to={ROUTES.trips} className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink">
+          <Icon name="arrowLeft" className="h-4 w-4" />
+          Back to Trips
+        </Link>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() =>
+              setVisibility({ id: data.id, visibility: publicTrip ? 'hidden' : 'public' })
+            }
+          >
+            {publicTrip ? 'Hide' : 'Make public'}
+          </Button>
+          <Button variant="danger" size="sm" onClick={() => setConfirmDelete(true)}>
+            Delete
+          </Button>
+        </div>
+      </div>
+
       <PageHeader
         title={data.name}
-        description={`${data.city}, ${data.country} · ${formatDisplayDate(data.startDate)} – ${formatDisplayDate(data.endDate)}`}
-        action={
-          <>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() =>
-                setVisibility({ id: data.id, visibility: publicTrip ? 'hidden' : 'public' })
-              }
-            >
-              {publicTrip ? 'Hide' : 'Make public'}
-            </Button>
-            <Button variant="danger" size="sm" onClick={() => setConfirmDelete(true)}>
-              Delete
-            </Button>
-          </>
-        }
+        description={`${data.city}, ${data.country} · ${formatDisplayDate(data.startDate)} – ${formatDisplayDate(data.endDate)}${stay != null ? ` (${stay} nights)` : ''}`}
       />
 
-      <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="space-y-4">
+      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="space-y-6">
+          {/* Cover Photo & Overview */}
           <Card padding={false} className="overflow-hidden">
-            <img src={cityHero(data.city)} alt="" className="h-56 w-full object-cover sm:h-72" />
+            <img
+              src={cityHero(data.city)}
+              alt={data.name}
+              className="h-56 w-full object-cover sm:h-72 bg-slate-200"
+              onError={(e) => {
+                e.currentTarget.src = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80'
+              }}
+            />
             <div className="space-y-4 p-6">
               <div className="flex flex-wrap gap-2">
-                <Badge tone={publicTrip ? 'success' : 'neutral'}>{data.visibility}</Badge>
+                <Badge tone={publicTrip ? 'success' : 'neutral'}>{data.visibility.toUpperCase()}</Badge>
                 <Badge tone="info">{data.style}</Badge>
+                {stay != null ? <Badge tone="neutral">{`${stay} nights`}</Badge> : null}
               </div>
-              <p className="text-sm leading-6 text-ink">{data.description}</p>
+              <p className="text-sm leading-relaxed text-ink">{data.description}</p>
             </div>
-          </Card>
-
-          <Card>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Itinerary</p>
-            <ol className="mt-4 space-y-4">
-              {(data.itinerary ?? []).map((stop) => (
-                <li key={`${stop.day}-${stop.title}`} className="flex gap-3">
-                  <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface text-xs font-semibold text-ink">
-                    {stop.day}
-                  </span>
-                  <div>
-                    <p className="font-medium text-ink">{stop.title}</p>
-                    <p className="mt-0.5 text-sm text-muted">{stop.detail}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
           </Card>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <Card>
             <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Trip details</p>
             <dl className="mt-4 grid gap-4">
@@ -132,17 +125,23 @@ export function TripDetailPage() {
             </dl>
           </Card>
 
+          {/* Organised By / Host Section (App Figma Alignment) */}
           <Card>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Host</p>
-            <div className="mt-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Organised by</p>
+            <div className="mt-3 flex items-center justify-between">
               <PersonChip name={data.owner} size="md" />
+              <span className="rounded-full bg-primary-50 px-2.5 py-1 text-xs font-semibold text-primary-700">Organiser (Host)</span>
             </div>
           </Card>
 
+          {/* Travel Companions Section */}
           <Card>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Companions</p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Travel Companions</p>
+              <span className="text-xs font-semibold text-muted">{(data.companions ?? []).length} Joined</span>
+            </div>
             {(data.companions ?? []).length > 0 ? (
-              <ul className="mt-3 space-y-2.5">
+              <ul className="space-y-2.5">
                 {data.companions.map((name) => (
                   <li key={name}>
                     <PersonChip name={name} />
@@ -150,14 +149,10 @@ export function TripDetailPage() {
                 ))}
               </ul>
             ) : (
-              <p className="mt-3 text-sm text-muted">No one has joined yet.</p>
+              <p className="text-sm text-muted">No companions have joined yet.</p>
             )}
           </Card>
 
-          <Card>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Admin notes</p>
-            <p className="mt-3 text-sm leading-6 text-ink">{data.notes}</p>
-          </Card>
         </div>
       </div>
 

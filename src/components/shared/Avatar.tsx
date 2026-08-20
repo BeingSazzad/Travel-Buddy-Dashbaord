@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
 export function Avatar({
@@ -9,6 +10,7 @@ export function Avatar({
   image?: string
   size?: 'sm' | 'md' | 'lg'
 }) {
+  const [imgError, setImgError] = useState(false)
   const initials = name
     .split(' ')
     .slice(0, 2)
@@ -16,11 +18,20 @@ export function Avatar({
     .join('')
     .toUpperCase()
   const box = size === 'lg' ? 'h-16 w-16 text-lg' : size === 'sm' ? 'h-7 w-7 text-[10px]' : 'h-9 w-9 text-xs'
-  if (image) {
-    return <img src={image} alt={name} className={cn('rounded-full object-cover', box)} />
+
+  if (image && !imgError) {
+    return (
+      <img
+        src={image}
+        alt={name}
+        className={cn('rounded-full object-cover', box)}
+        onError={() => setImgError(true)}
+      />
+    )
   }
+
   return (
-    <span className={cn('inline-flex items-center justify-center rounded-full bg-primary-100 font-display font-semibold text-primary-800', box)}>
+    <span className={cn('inline-flex items-center justify-center rounded-full bg-primary-100 font-display font-semibold text-primary-800 shrink-0', box)}>
       {initials}
     </span>
   )
