@@ -16,6 +16,7 @@ import { venuesStore } from '@/lib/venuesStore'
 import { notificationsStore } from '@/lib/notificationsStore'
 import { cmsStore } from '@/lib/cmsStore'
 import { broadcastsStore } from '@/lib/broadcastsStore'
+import { transactionsStore } from '@/lib/transactionsStore'
 import App from './App'
 import '@/styles/index.css'
 
@@ -33,6 +34,7 @@ venuesStore.list()
 notificationsStore.list()
 cmsStore.list()
 broadcastsStore.list()
+transactionsStore.list()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

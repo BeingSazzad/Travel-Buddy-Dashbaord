@@ -1,5 +1,6 @@
 import { Icon } from '@/components/ui/Icon'
 import type { BroadcastAudience } from '@/lib/broadcastsStore'
+import { audienceLabel } from '@/lib/utils'
 
 export function BroadcastPhonePreview({
   title,
@@ -24,7 +25,11 @@ export function BroadcastPhonePreview({
             <div className="flex h-[44px] items-end justify-between px-6 pb-1.5 text-[10px] font-semibold text-[#1c2434]">
               <span>9:41</span>
               <span className="flex items-center gap-1">
-                <span className="h-2 w-4 rounded-[1px] bg-[#1c2434]/80" />
+                <span className="inline-flex items-end gap-[2px]">
+                  <span className="h-[4px] w-[3px] rounded-[1px] bg-[#1c2434]/70" />
+                  <span className="h-[6px] w-[3px] rounded-[1px] bg-[#1c2434]/80" />
+                  <span className="h-[8px] w-[3px] rounded-[1px] bg-[#1c2434]" />
+                </span>
                 <span className="h-2.5 w-4 rounded-sm border border-[#1c2434]/80" />
               </span>
             </div>
@@ -32,38 +37,67 @@ export function BroadcastPhonePreview({
             <div className="flex items-center justify-between px-3 pb-2 pt-1">
               <div className="flex items-center gap-1.5">
                 <Icon name="arrowLeft" className="h-4 w-4 text-[#1c2434]" />
-                <p className="font-display text-[15px] font-semibold tracking-tight text-[#1c2434]">Notifications</p>
+                <p className="text-[15px] font-bold tracking-tight text-[#1c2434]">Notifications</p>
               </div>
-              <span className="text-[10px] font-medium text-[#9d8058]">Mark all read</span>
+              <span className="text-[11px] font-medium text-[#9d8058]">Mark all read</span>
             </div>
 
             <div className="min-h-[420px] px-3 pb-6">
-              <div className="flex items-start gap-3 border-b border-[#e8e2da] py-3.5">
-                <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#9d8058]/12">
-                  <Icon name="shield" className="h-4 w-4 text-[#9d8058]" />
+              {/* Admin broadcast — matches member app admin_message (shield icon) */}
+              <div className="flex items-start gap-3.5 border-b border-[#e8e2da]/70 py-4">
+                <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#9d8058]/10">
+                  <Icon name="shield" className="h-4 w-4 text-[#9d8058]" strokeWidth={1.5} />
                 </div>
                 <div className="min-w-0 flex-1 pt-0.5">
                   <div className="flex items-start gap-2">
-                    <p className={`flex-1 text-[13px] leading-snug text-[#1c2434] ${placeholder ? 'font-medium text-[#9a9188]' : 'font-semibold'}`}>
+                    <p
+                      className={`flex-1 text-sm leading-snug text-[#1c2434] ${
+                        placeholder ? 'font-medium text-[#9a9188]' : 'font-semibold'
+                      }`}
+                    >
                       {previewTitle}
                     </p>
-                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#9d8058]" />
+                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#9d8058]" aria-hidden />
                   </div>
-                  <p className={`mt-1 line-clamp-3 text-[12px] leading-relaxed ${placeholder ? 'text-[#b3aba3]' : 'text-[#6b645c]'}`}>
+                  <p
+                    className={`mt-1 line-clamp-2 text-sm leading-relaxed ${
+                      placeholder ? 'text-[#b3aba3]' : 'text-[#6b645c]'
+                    }`}
+                  >
                     {previewBody}
                   </p>
-                  <p className="mt-1.5 text-[10px] text-[#9a9188]">Just now · {audience === 'subscribers' ? 'Subscribers' : 'All members'}</p>
+                  <p className="mt-1.5 text-xs text-[#9a9188]/90">
+                    Just now · {audienceLabel(audience)}
+                  </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 py-3.5 opacity-45">
-                <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#9d8058]/12">
-                  <Icon name="sparkles" className="h-4 w-4 text-[#9d8058]" />
+              {/* Context row — same layout as member NotificationItem (avatar + sparkles match) */}
+              <div className="flex items-start gap-3.5 border-b border-[#e8e2da]/70 py-4 opacity-55">
+                <img
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80"
+                  alt=""
+                  className="mt-0.5 h-10 w-10 shrink-0 rounded-full object-cover object-top"
+                />
+                <div className="min-w-0 flex-1 pt-0.5">
+                  <p className="text-sm font-medium leading-snug text-[#1c2434]">New match with Maya</p>
+                  <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-[#6b645c]">
+                    Also travelling to Bali in August.
+                  </p>
+                  <p className="mt-1.5 text-xs text-[#9a9188]/90">30 minutes ago</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3.5 py-4 opacity-40">
+                <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#9d8058]/10">
+                  <Icon name="events" className="h-4 w-4 text-[#9d8058]" strokeWidth={1.5} />
                 </div>
                 <div className="min-w-0 flex-1 pt-0.5">
-                  <p className="text-[13px] font-medium leading-snug text-[#1c2434]">New match with Maya</p>
-                  <p className="mt-1 text-[12px] leading-relaxed text-[#6b645c]">Also travelling to Bali in August.</p>
-                  <p className="mt-1.5 text-[10px] text-[#9a9188]">30m ago</p>
+                  <p className="text-sm font-medium leading-snug text-[#1c2434]">Upcoming event: Sunset Yoga</p>
+                  <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-[#6b645c]">
+                    Santorini Sunset Yoga is happening this Thursday at 8:00 AM.
+                  </p>
+                  <p className="mt-1.5 text-xs text-[#9a9188]/90">3 hours ago</p>
                 </div>
               </div>
             </div>
@@ -74,7 +108,7 @@ export function BroadcastPhonePreview({
           </div>
         </div>
       </div>
-      <p className="mt-3 text-center text-xs text-muted">As it appears in the Seluna app</p>
+      <p className="mt-3 text-center text-xs text-muted">As it appears in the Seluna Notification Center</p>
     </div>
   )
 }

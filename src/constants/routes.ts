@@ -7,11 +7,14 @@ export const ROUTES = {
   users: '/users',
   userDetail: '/users/:id',
   trips: '/trips',
+  tripDetail: '/trips/:id',
   events: '/events',
+  eventDetail: '/events/:id',
   destinations: '/destinations',
   reports: '/reports',
   subscriptions: '/subscriptions',
   subscribers: '/subscribers',
+  transactions: '/transactions',
   reviews: '/reviews',
   deals: '/deals',
   content: '/content',
@@ -23,4 +26,12 @@ export const ROUTES = {
 
 export function userPath(id: string) {
   return `/users/${id}`
+}
+
+export function tripPath(id: string) {
+  return `/trips/${id}`
+}
+
+export function eventPath(id: string) {
+  return `/events/${id}`
 }

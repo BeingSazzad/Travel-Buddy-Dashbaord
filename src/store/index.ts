@@ -16,6 +16,7 @@ import '@/services/endpoints/notificationsApi'
 import '@/services/endpoints/metricsApi'
 import '@/services/endpoints/cmsApi'
 import '@/services/endpoints/broadcastsApi'
+import '@/services/endpoints/transactionsApi'
 
 export const store = configureStore({
   reducer: rootReducer,

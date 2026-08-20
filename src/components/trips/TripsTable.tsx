@@ -1,22 +1,32 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Card } from '@/components/ui/Card'
 import { DataTable } from '@/components/ui/DataTable'
 import { Badge } from '@/components/shared/Badge'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { Pagination } from '@/components/shared/Pagination'
 import { RowMenu } from '@/components/shared/RowMenu'
+import { ConfirmAction } from '@/components/shared/ConfirmAction'
 import { PersonChip, PlaceChip } from '@/components/shared/EntityChip'
+import { tripPath } from '@/constants/routes'
 import { useTableState } from '@/hooks/useTableState'
 import { formatDisplayDate } from '@/lib/utils'
 import { TRIP_WHEN_OPTIONS, matchesRange, type WhenPreset } from '@/lib/whenPresets'
-import { useGetTripsQuery, useSetTripVisibilityMutation } from '@/services/endpoints/tripsApi'
+import {
+  useDeleteTripMutation,
+  useGetTripsQuery,
+  useSetTripVisibilityMutation,
+} from '@/services/endpoints/tripsApi'
 import type { Trip } from '@/lib/tripsStore'
 
 export function TripsTable() {
+  const navigate = useNavigate()
   const { data = [] } = useGetTripsQuery()
   const [setVisibility] = useSetTripVisibilityMutation()
+  const [deleteTrip] = useDeleteTripMutation()
   const [visibility, setVisibilityFilter] = useState('all')
   const [when, setWhen] = useState<WhenPreset>('all')
+  const [deleting, setDeleting] = useState<Trip | null>(null)
   const scoped = useMemo(
     () =>
       data.filter(
@@ -67,6 +77,7 @@ export function TripsTable() {
         sortKey={table.sortKey}
         sortDir={table.sortDir}
         onSort={table.onSort}
+        onRowClick={(r) => navigate(tripPath(r.id))}
         columns={[
           {
             key: 'name',
@@ -92,11 +103,13 @@ export function TripsTable() {
             render: (r) => (
               <RowMenu
                 items={[
+                  { label: 'View', onClick: () => navigate(tripPath(r.id)) },
                   {
                     label: r.visibility === 'public' ? 'Hide' : 'Make public',
                     onClick: () =>
                       setVisibility({ id: r.id, visibility: r.visibility === 'public' ? 'hidden' : 'public' }),
                   },
+                  { label: 'Delete', danger: true, onClick: () => setDeleting(r) },
                 ]}
               />
             ),
@@ -104,6 +117,19 @@ export function TripsTable() {
         ]}
       />
       <Pagination page={table.page} pages={table.pages} total={table.total} onPage={table.setPage} />
+
+      <ConfirmAction
+        open={Boolean(deleting)}
+        title="Delete this trip?"
+        body={`${deleting?.name ?? 'This trip'} will be removed from the admin list. This demo delete cannot be undone.`}
+        confirmLabel="Delete"
+        danger
+        onClose={() => setDeleting(null)}
+        onConfirm={() => {
+          if (deleting) void deleteTrip(deleting.id)
+          setDeleting(null)
+        }}
+      />
     </Card>
   )
 }

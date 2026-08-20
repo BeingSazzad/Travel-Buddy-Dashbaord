@@ -82,7 +82,6 @@ export function UsersTable() {
           },
           { key: 'email', header: 'Email', render: (r) => r.email },
           { key: 'city', header: 'City', sortable: true, render: (r) => `${r.city}, ${r.country}` },
-          { key: 'status', header: 'Status', render: (r) => <Badge tone={statusTone(r.status)}>{r.status}</Badge> },
           {
             key: 'subscription',
             header: 'Subscriber',
@@ -90,12 +89,16 @@ export function UsersTable() {
               const sub = subscribers.find((s) => s.memberId === r.id || s.email === r.email)
               if (!sub) return <span className="text-muted">None</span>
               const plan = plans.find((p) => p.id === sub.planId)
-              return (
-                <span className="inline-flex items-center gap-2">
-                  <span className="text-sm">{plan?.name ?? 'Plan'}</span>
-                  <Badge tone={subTone(sub.status)}>{sub.status}</Badge>
-                </span>
-              )
+              return <span className="text-sm">{plan?.name ?? 'Plan'}</span>
+            },
+          },
+          {
+            key: 'status',
+            header: 'Status',
+            render: (r) => {
+              const sub = subscribers.find((s) => s.memberId === r.id || s.email === r.email)
+              if (sub) return <Badge tone={subTone(sub.status)}>{sub.status}</Badge>
+              return <Badge tone={statusTone(r.status)}>{r.status}</Badge>
             },
           },
           {

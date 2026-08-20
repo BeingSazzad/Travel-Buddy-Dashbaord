@@ -50,25 +50,47 @@ export const api = createApi({
     'Metrics',
     'Cms',
     'Broadcasts',
+    'Transactions',
   ],
   endpoints: () => ({}),
 })
+
+function toAuthUser(staff: { id: string; name: string; email: string; role: Role; avatar: string }): AuthUser {
+  return {
+    id: staff.id,
+    name: staff.name,
+    email: staff.email,
+    role: staff.role,
+    token: 'demo-jwt',
+    avatar: staff.avatar,
+  }
+}
 
 export const authBase = {
   async login(body: { email: string; password: string }): Promise<AuthUser> {
     await delay()
     const staff = staffStore.findByEmail(body.email)
     if (staff && staff.password === body.password) {
-      return persist({
-        id: staff.id,
-        name: staff.name,
-        email: staff.email,
-        role: staff.role,
-        token: 'demo-jwt',
-        avatar: staff.avatar,
-      })
+      return persist(toAuthUser(staff))
     }
     throw { status: 401, message: 'Invalid email or password' }
+  },
+  async updateProfile(body: { name: string; email: string }): Promise<AuthUser> {
+    await delay()
+    const me = readUser()
+    if (!me) throw { status: 401, message: 'Not signed in' }
+    const result = staffStore.updateProfile(me.id, body)
+    if (!result || 'error' in result) throw { status: 400, message: result?.error ?? 'Could not update profile' }
+    if (!result.data) throw { status: 404, message: 'Account not found' }
+    return persist(toAuthUser(result.data))
+  },
+  async changePassword(body: { currentPassword: string; nextPassword: string }): Promise<boolean> {
+    await delay()
+    const me = readUser()
+    if (!me) throw { status: 401, message: 'Not signed in' }
+    const result = staffStore.changePassword(me.id, body.currentPassword, body.nextPassword)
+    if ('error' in result) throw { status: 400, message: result.error }
+    return true
   },
   me: readUser,
   logout() {

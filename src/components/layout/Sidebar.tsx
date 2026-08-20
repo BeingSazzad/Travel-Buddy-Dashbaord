@@ -34,7 +34,6 @@ const groups: Array<{ title: string; items: NavItem[] }> = [
       { to: ROUTES.destinations, label: 'Destinations', icon: 'destinations' },
       { to: ROUTES.deals, label: 'Deals', icon: 'deals' },
       { to: ROUTES.reviews, label: 'Reviews', icon: 'reviews' },
-      { to: ROUTES.content, label: 'Content', icon: 'content' },
     ],
   },
   {
@@ -42,6 +41,7 @@ const groups: Array<{ title: string; items: NavItem[] }> = [
     items: [
       { to: ROUTES.subscriptions, label: 'Subscriptions', icon: 'subscriptions' },
       { to: ROUTES.subscribers, label: 'Subscribers', icon: 'user' },
+      { to: ROUTES.transactions, label: 'Transactions', icon: 'transactions' },
       { to: ROUTES.cms, label: 'CMS', icon: 'cms' },
       { to: ROUTES.broadcast, label: 'Broadcast', icon: 'megaphone' },
       { to: ROUTES.notifications, label: 'Notifications', icon: 'notifications' },

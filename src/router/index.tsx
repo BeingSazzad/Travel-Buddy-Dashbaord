@@ -9,18 +9,20 @@ import { DashboardPage } from '@/pages/dashboard/DashboardPage'
 import { UsersPage } from '@/pages/users/UsersPage'
 import { UserDetailPage } from '@/pages/users/UserDetailPage'
 import { TripsPage } from '@/pages/trips/TripsPage'
+import { TripDetailPage } from '@/pages/trips/TripDetailPage'
 import { EventsPage } from '@/pages/events/EventsPage'
+import { EventDetailPage } from '@/pages/events/EventDetailPage'
 import { DestinationsPage } from '@/pages/destinations/DestinationsPage'
 import { ReportsPage } from '@/pages/reports/ReportsPage'
 import { SubscriptionsPage } from '@/pages/subscriptions/SubscriptionsPage'
 import { SubscribersPage } from '@/pages/subscribers/SubscribersPage'
 import { ReviewsPage } from '@/pages/reviews/ReviewsPage'
 import { DealsPage } from '@/pages/deals/DealsPage'
-import { ContentPage } from '@/pages/content/ContentPage'
 import { NotificationsPage } from '@/pages/notifications/NotificationsPage'
 import { SettingsPage } from '@/pages/settings/SettingsPage'
 import { CmsPage } from '@/pages/cms/CmsPage'
 import { BroadcastPage } from '@/pages/broadcast/BroadcastPage'
+import { TransactionsPage } from '@/pages/transactions/TransactionsPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ROUTES } from '@/constants/routes'
 
@@ -60,14 +62,17 @@ export const router = createBrowserRouter([
           { path: ROUTES.users, element: <UsersPage /> },
           { path: ROUTES.userDetail, element: <UserDetailPage /> },
           { path: ROUTES.trips, element: <TripsPage /> },
+          { path: ROUTES.tripDetail, element: <TripDetailPage /> },
           { path: ROUTES.events, element: <EventsPage /> },
+          { path: ROUTES.eventDetail, element: <EventDetailPage /> },
           { path: ROUTES.destinations, element: <DestinationsPage /> },
           { path: ROUTES.reports, element: <ReportsPage /> },
           { path: ROUTES.subscriptions, element: <SubscriptionsPage /> },
           { path: ROUTES.subscribers, element: <SubscribersPage /> },
+          { path: ROUTES.transactions, element: <TransactionsPage /> },
           { path: ROUTES.reviews, element: <ReviewsPage /> },
           { path: ROUTES.deals, element: <DealsPage /> },
-          { path: ROUTES.content, element: <ContentPage /> },
+          { path: ROUTES.content, element: <Navigate to={ROUTES.destinations} replace /> },
           { path: ROUTES.notifications, element: <NotificationsPage /> },
           { path: ROUTES.settings, element: <SettingsPage /> },
           { path: ROUTES.cms, element: <CmsPage /> },

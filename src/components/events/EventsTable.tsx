@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Card } from '@/components/ui/Card'
 import { DataTable } from '@/components/ui/DataTable'
 import { Badge } from '@/components/shared/Badge'
@@ -7,10 +8,15 @@ import { Pagination } from '@/components/shared/Pagination'
 import { RowMenu } from '@/components/shared/RowMenu'
 import { PersonChip, PlaceChip } from '@/components/shared/EntityChip'
 import { ConfirmAction } from '@/components/shared/ConfirmAction'
+import { eventPath } from '@/constants/routes'
 import { useTableState } from '@/hooks/useTableState'
 import { formatDisplayDate } from '@/lib/utils'
 import { EVENT_WHEN_OPTIONS, matchesWhen, type WhenPreset } from '@/lib/whenPresets'
-import { useGetEventsQuery, useSetEventStatusMutation } from '@/services/endpoints/eventsApi'
+import {
+  useDeleteEventMutation,
+  useGetEventsQuery,
+  useSetEventStatusMutation,
+} from '@/services/endpoints/eventsApi'
 import type { Meetup } from '@/lib/eventsStore'
 
 function tone(s: Meetup['status']) {
@@ -21,11 +27,14 @@ function tone(s: Meetup['status']) {
 }
 
 export function EventsTable() {
+  const navigate = useNavigate()
   const { data = [] } = useGetEventsQuery()
   const [setEventStatus] = useSetEventStatusMutation()
+  const [deleteEvent] = useDeleteEventMutation()
   const [status, setStatusFilter] = useState('all')
   const [when, setWhen] = useState<WhenPreset>('all')
   const [cancelling, setCancelling] = useState<Meetup | null>(null)
+  const [deleting, setDeleting] = useState<Meetup | null>(null)
   const scoped = useMemo(
     () =>
       data.filter(
@@ -77,6 +86,7 @@ export function EventsTable() {
         sortKey={table.sortKey}
         sortDir={table.sortDir}
         onSort={table.onSort}
+        onRowClick={(r) => navigate(eventPath(r.id))}
         columns={[
           {
             key: 'title',
@@ -93,11 +103,13 @@ export function EventsTable() {
             header: 'Action',
             render: (r) => (
               <RowMenu
-                items={
-                  r.status === 'upcoming' || r.status === 'live'
+                items={[
+                  { label: 'View', onClick: () => navigate(eventPath(r.id)) },
+                  ...(r.status === 'upcoming' || r.status === 'live'
                     ? [{ label: 'Cancel', danger: true, onClick: () => setCancelling(r) }]
-                    : []
-                }
+                    : []),
+                  { label: 'Delete', danger: true, onClick: () => setDeleting(r) },
+                ]}
               />
             ),
           },
@@ -115,6 +127,18 @@ export function EventsTable() {
         onConfirm={() => {
           if (cancelling) void setEventStatus({ id: cancelling.id, status: 'cancelled' })
           setCancelling(null)
+        }}
+      />
+      <ConfirmAction
+        open={Boolean(deleting)}
+        title="Delete this event?"
+        body={`${deleting?.title ?? 'This event'} will be removed from the admin list. This demo delete cannot be undone.`}
+        confirmLabel="Delete"
+        danger
+        onClose={() => setDeleting(null)}
+        onConfirm={() => {
+          if (deleting) void deleteEvent(deleting.id)
+          setDeleting(null)
         }}
       />
     </Card>

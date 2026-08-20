@@ -41,7 +41,7 @@ export function DataTable<T>({
         <thead>
           <tr className="border-b border-line bg-[#f7f8fb] text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
             {columns.map((col) => (
-              <th key={col.key} className={`${head} font-semibold ${col.key === 'actions' ? 'w-[120px] text-right' : 'text-left'}`}>
+              <th key={col.key} className={`${head} font-semibold ${col.key === 'actions' ? 'w-[1%] whitespace-nowrap text-right' : 'text-left'}`}>
                 {col.sortable && onSort ? (
                   <button type="button" className="inline-flex items-center gap-1" onClick={() => onSort(col.key)}>
                     {col.header}
@@ -76,7 +76,7 @@ export function DataTable<T>({
                   {columns.map((col) => (
                     <td
                       key={col.key}
-                      className={`${cell} text-ink ${col.key === 'actions' ? 'text-right' : ''}`}
+                      className={`${cell} text-ink ${col.key === 'actions' ? 'whitespace-nowrap text-right' : ''}`}
                       onClick={col.key === 'actions' ? (e) => e.stopPropagation() : undefined}
                     >
                       <div className={col.key === 'actions' ? 'flex justify-end' : undefined}>{col.render(row)}</div>

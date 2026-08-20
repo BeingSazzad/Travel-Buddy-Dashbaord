@@ -31,6 +31,7 @@ import {
   Pencil,
   Plane,
   Plus,
+  Receipt,
   Save,
   Search,
   Send,
@@ -65,6 +66,7 @@ export type IconName =
   | 'mail'
   | 'lock'
   | 'plus'
+  | 'transactions'
   | 'more'
   | 'close'
   | 'check'
@@ -114,6 +116,7 @@ const icons: Record<IconName, LucideIcon> = {
   mail: Mail,
   lock: Lock,
   plus: Plus,
+  transactions: Receipt,
   more: MoreHorizontal,
   close: X,
   check: Check,

@@ -82,8 +82,8 @@ export function RowMenu({
   if (only) {
     return (
       <Tooltip content={only.label}>
-        <Button variant={only.danger ? 'danger' : 'secondary'} size="sm" onClick={only.onClick}>
-          <Icon name={menuIcon(only.label)} className="h-3.5 w-3.5" />
+        <Button variant={only.danger ? 'danger' : 'secondary'} size="sm" onClick={only.onClick} className="whitespace-nowrap">
+          <Icon name={menuIcon(only.label)} className="h-3.5 w-3.5 shrink-0" />
           {only.label}
         </Button>
       </Tooltip>

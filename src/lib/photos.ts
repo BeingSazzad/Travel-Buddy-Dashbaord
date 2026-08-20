@@ -45,6 +45,10 @@ export function cityPhoto(city: string) {
   return CITY_PHOTOS[key] ?? PLACE_FALLBACKS[hashIndex(key || 'place', PLACE_FALLBACKS.length)]
 }
 
+export function cityHero(city: string) {
+  return cityPhoto(city).replace('w=240&h=240', 'w=1600&h=720')
+}
+
 export function placePhoto(id: string, city?: string) {
   if (city) return cityPhoto(city)
   return PLACE_FALLBACKS[hashIndex(id, PLACE_FALLBACKS.length)]
