@@ -72,8 +72,32 @@ export function TripDetailPage() {
         description={`${data.city}, ${data.country} · ${formatDisplayDate(data.startDate)} – ${formatDisplayDate(data.endDate)}${stay != null ? ` (${stay} nights)` : ''}`}
       />
 
-      {/* 4 Visual KPI Stat Cards Bar */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* 1. HERO COVER PICTURE CARD (PICTURE FIRST!) */}
+      <Card padding={false} className="overflow-hidden">
+        <img
+          src={cityHero(data.city)}
+          alt={data.name}
+          className="h-64 w-full object-cover sm:h-80 bg-slate-200"
+          onError={(e) => {
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80'
+          }}
+        />
+        <div className="space-y-4 p-6">
+          <div className="flex flex-wrap gap-2">
+            <Badge tone={publicTrip ? 'success' : 'neutral'}>{data.visibility.toUpperCase()}</Badge>
+            <Badge tone="info">{data.style}</Badge>
+            {stay != null ? <Badge tone="neutral">{`${stay} nights`}</Badge> : null}
+            <Badge tone="warn">{`${data.spots} Total Spots`}</Badge>
+          </div>
+          <div>
+            <h3 className="text-base font-semibold text-ink mb-1">About this Trip</h3>
+            <p className="text-sm leading-relaxed text-ink/90">{data.description}</p>
+          </div>
+        </div>
+      </Card>
+
+      {/* 2. VISUAL KPI STAT CARDS BAR */}
+      <div className="grid gap-4 sm:grid-cols-3">
         <Card className="p-4 bg-gradient-to-br from-white to-primary-50/30">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted">Trip Dates</span>
@@ -111,76 +135,11 @@ export function TripDetailPage() {
             <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${occupancyPercent}%` }} />
           </div>
         </Card>
-
-        <Card className="p-4 bg-gradient-to-br from-white to-amber-50/30">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted">Est. Daily Budget</span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-700">
-              <Icon name="transactions" className="h-4 w-4" />
-            </div>
-          </div>
-          <p className="mt-2 text-xl font-bold text-ink">{data.budgetPerDay}</p>
-          <p className="mt-0.5 text-xs text-muted">Estimated per person / day</p>
-        </Card>
       </div>
 
-      {/* Main 2-Column Details Grid */}
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="space-y-6">
-          {/* Cover Photo & Description Card */}
-          <Card padding={false} className="overflow-hidden">
-            <img
-              src={cityHero(data.city)}
-              alt={data.name}
-              className="h-56 w-full object-cover sm:h-72 bg-slate-200"
-              onError={(e) => {
-                e.currentTarget.src = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80'
-              }}
-            />
-            <div className="space-y-4 p-6">
-              <div className="flex flex-wrap gap-2">
-                <Badge tone={publicTrip ? 'success' : 'neutral'}>{data.visibility.toUpperCase()}</Badge>
-                <Badge tone="info">{data.style}</Badge>
-                {stay != null ? <Badge tone="neutral">{`${stay} nights`}</Badge> : null}
-                <Badge tone="warn">{`${data.spots} Total Spots`}</Badge>
-              </div>
-              <div>
-                <h3 className="text-base font-semibold text-ink mb-1">About this Trip</h3>
-                <p className="text-sm leading-relaxed text-ink/90">{data.description}</p>
-              </div>
-            </div>
-          </Card>
-
-          {/* Day-by-Day Itinerary Schedule (Real App Feature) */}
-          {(data.itinerary ?? []).length > 0 ? (
-            <Card>
-              <div className="flex items-center justify-between border-b border-line pb-3.5 mb-5">
-                <div className="flex items-center gap-2">
-                  <Icon name="events" className="h-5 w-5 text-primary-600" />
-                  <h3 className="font-display text-base font-semibold text-ink">Planned Itinerary & Schedule</h3>
-                </div>
-                <span className="text-xs font-semibold text-muted">{data.itinerary.length} Days Planned</span>
-              </div>
-
-              <div className="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-line">
-                {data.itinerary.map((stop) => (
-                  <div key={stop.day} className="relative">
-                    <div className="absolute -left-[19px] top-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-primary-600 ring-2 ring-primary-100" />
-                    <div>
-                      <span className="inline-block rounded bg-primary-50 px-2 py-0.5 text-[11px] font-bold text-primary-700 uppercase tracking-wider mb-1">
-                        Day {stop.day}
-                      </span>
-                      <h4 className="text-sm font-bold text-ink">{stop.title}</h4>
-                      <p className="mt-1 text-xs text-muted leading-relaxed">{stop.detail}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          ) : null}
-        </div>
-
-        {/* Right Sidebar Cards */}
+      {/* 3. DETAILS GRID */}
+      <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+        {/* Left Column Cards */}
         <div className="space-y-6">
           {/* Organised By / Host Section */}
           <Card>
@@ -191,6 +150,28 @@ export function TripDetailPage() {
             </div>
           </Card>
 
+          {/* Admin Metadata Card */}
+          <Card>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Admin Information</p>
+            <dl className="mt-3 space-y-2.5 text-xs">
+              <div className="flex justify-between py-1 border-b border-line/60">
+                <dt className="text-muted">Created On</dt>
+                <dd className="font-medium text-ink">{formatDisplayDate(data.createdAt)}</dd>
+              </div>
+              <div className="flex justify-between py-1 border-b border-line/60">
+                <dt className="text-muted">Trip ID</dt>
+                <dd className="font-mono text-ink">{data.id}</dd>
+              </div>
+              <div className="flex justify-between py-1">
+                <dt className="text-muted">Feed Status</dt>
+                <dd className="font-medium text-ink">{publicTrip ? 'Live in App Feed' : 'Hidden from Public Feed'}</dd>
+              </div>
+            </dl>
+          </Card>
+        </div>
+
+        {/* Right Column Cards */}
+        <div className="space-y-6">
           {/* Confirmed Travel Companions Section */}
           <Card>
             <div className="flex items-center justify-between mb-3 border-b border-line pb-3">
@@ -211,25 +192,6 @@ export function TripDetailPage() {
             ) : (
               <p className="text-sm text-muted py-2">No companions have joined yet.</p>
             )}
-          </Card>
-
-          {/* Admin Metadata Card */}
-          <Card>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Admin Information</p>
-            <dl className="mt-3 space-y-2.5 text-xs">
-              <div className="flex justify-between py-1 border-b border-line/60">
-                <dt className="text-muted">Created On</dt>
-                <dd className="font-medium text-ink">{formatDisplayDate(data.createdAt)}</dd>
-              </div>
-              <div className="flex justify-between py-1 border-b border-line/60">
-                <dt className="text-muted">Trip ID</dt>
-                <dd className="font-mono text-ink">{data.id}</dd>
-              </div>
-              <div className="flex justify-between py-1">
-                <dt className="text-muted">Feed Status</dt>
-                <dd className="font-medium text-ink">{publicTrip ? 'Live in App Feed' : 'Hidden from Public Feed'}</dd>
-              </div>
-            </dl>
           </Card>
         </div>
       </div>

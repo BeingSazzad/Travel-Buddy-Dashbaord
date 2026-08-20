@@ -73,7 +73,30 @@ export function EventDetailPage() {
         description={`${data.city}, ${data.country} · ${formatDisplayDate(data.date)} at ${data.time}`}
       />
 
-      {/* 4 Visual KPI Stat Cards Bar */}
+      {/* 1. HERO COVER PICTURE CARD (PICTURE FIRST!) */}
+      <Card padding={false} className="overflow-hidden">
+        <img
+          src={cityHero(data.city)}
+          alt={data.title}
+          className="h-64 w-full object-cover sm:h-80 bg-slate-200"
+          onError={(e) => {
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80'
+          }}
+        />
+        <div className="space-y-4 p-6">
+          <div className="flex flex-wrap gap-2">
+            <Badge tone={tone(data.status)}>{data.status.toUpperCase()}</Badge>
+            <Badge tone="info">{`${data.attendees} RSVPs`}</Badge>
+            <Badge tone="neutral">{`${data.capacity} Capacity`}</Badge>
+          </div>
+          <div>
+            <h3 className="text-base font-semibold text-ink mb-1">What we'll do</h3>
+            <p className="text-sm leading-relaxed text-ink/90">{data.description}</p>
+          </div>
+        </div>
+      </Card>
+
+      {/* 2. 4 VISUAL KPI STAT CARDS BAR */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="p-4 bg-gradient-to-br from-white to-primary-50/30">
           <div className="flex items-center justify-between">
@@ -125,62 +148,9 @@ export function EventDetailPage() {
         </Card>
       </div>
 
-      {/* Main 2-Column Details Grid */}
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="space-y-6">
-          {/* Cover Photo & Description Card */}
-          <Card padding={false} className="overflow-hidden">
-            <img
-              src={cityHero(data.city)}
-              alt={data.title}
-              className="h-56 w-full object-cover sm:h-72 bg-slate-200"
-              onError={(e) => {
-                e.currentTarget.src = 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80'
-              }}
-            />
-            <div className="space-y-4 p-6">
-              <div className="flex flex-wrap gap-2">
-                <Badge tone={tone(data.status)}>{data.status.toUpperCase()}</Badge>
-                <Badge tone="info">{`${data.attendees} RSVPs`}</Badge>
-                <Badge tone="neutral">{`${data.capacity} Capacity`}</Badge>
-              </div>
-              <div>
-                <h3 className="text-base font-semibold text-ink mb-1">What we'll do</h3>
-                <p className="text-sm leading-relaxed text-ink/90">{data.description}</p>
-              </div>
-            </div>
-          </Card>
-
-          {/* Event Agenda & Schedule Timeline (Real App Feature) */}
-          {(data.agenda ?? []).length > 0 ? (
-            <Card>
-              <div className="flex items-center justify-between border-b border-line pb-3.5 mb-5">
-                <div className="flex items-center gap-2">
-                  <Icon name="events" className="h-5 w-5 text-primary-600" />
-                  <h3 className="font-display text-base font-semibold text-ink">Event Agenda & Timeline</h3>
-                </div>
-                <span className="text-xs font-semibold text-muted">{data.agenda.length} Agenda Stops</span>
-              </div>
-
-              <div className="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-line">
-                {data.agenda.map((stop, idx) => (
-                  <div key={idx} className="relative">
-                    <div className="absolute -left-[19px] top-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-primary-600 ring-2 ring-primary-100" />
-                    <div>
-                      <span className="inline-block rounded bg-primary-50 px-2 py-0.5 text-[11px] font-bold text-primary-700 tracking-wider mb-1">
-                        ⏰ {stop.time}
-                      </span>
-                      <h4 className="text-sm font-bold text-ink">{stop.title}</h4>
-                      <p className="mt-1 text-xs text-muted leading-relaxed">{stop.detail}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          ) : null}
-        </div>
-
-        {/* Right Sidebar Cards */}
+      {/* 3. DETAILS GRID */}
+      <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+        {/* Left Column Cards */}
         <div className="space-y-6">
           {/* Organised By / Host Card */}
           <Card>
@@ -191,6 +161,28 @@ export function EventDetailPage() {
             </div>
           </Card>
 
+          {/* Admin Metadata Card */}
+          <Card>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Admin Information</p>
+            <dl className="mt-3 space-y-2.5 text-xs">
+              <div className="flex justify-between py-1 border-b border-line/60">
+                <dt className="text-muted">Created On</dt>
+                <dd className="font-medium text-ink">{formatDisplayDate(data.createdAt)}</dd>
+              </div>
+              <div className="flex justify-between py-1 border-b border-line/60">
+                <dt className="text-muted">Event ID</dt>
+                <dd className="font-mono text-ink">{data.id}</dd>
+              </div>
+              <div className="flex justify-between py-1">
+                <dt className="text-muted">Fill Status</dt>
+                <dd className="font-medium text-ink">{occupancyPercent}% Capacity</dd>
+              </div>
+            </dl>
+          </Card>
+        </div>
+
+        {/* Right Column Cards */}
+        <div className="space-y-6">
           {/* Confirmed Attendees Section */}
           <Card>
             <div className="flex items-center justify-between mb-3 border-b border-line pb-3">
@@ -211,25 +203,6 @@ export function EventDetailPage() {
             ) : (
               <p className="text-sm text-muted py-2">No confirmed guests yet.</p>
             )}
-          </Card>
-
-          {/* Admin Metadata Card */}
-          <Card>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Admin Information</p>
-            <dl className="mt-3 space-y-2.5 text-xs">
-              <div className="flex justify-between py-1 border-b border-line/60">
-                <dt className="text-muted">Created On</dt>
-                <dd className="font-medium text-ink">{formatDisplayDate(data.createdAt)}</dd>
-              </div>
-              <div className="flex justify-between py-1 border-b border-line/60">
-                <dt className="text-muted">Event ID</dt>
-                <dd className="font-mono text-ink">{data.id}</dd>
-              </div>
-              <div className="flex justify-between py-1">
-                <dt className="text-muted">Fill Status</dt>
-                <dd className="font-medium text-ink">{occupancyPercent}% Capacity</dd>
-              </div>
-            </dl>
           </Card>
         </div>
       </div>
