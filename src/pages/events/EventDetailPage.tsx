@@ -96,8 +96,8 @@ export function EventDetailPage() {
         </div>
       </Card>
 
-      {/* 2. 4 VISUAL KPI STAT CARDS BAR */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* 2. VISUAL KPI STAT CARDS BAR */}
+      <div className="grid gap-4 sm:grid-cols-3">
         <Card className="p-4 bg-gradient-to-br from-white to-primary-50/30">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted">Event Date</span>
@@ -134,17 +134,6 @@ export function EventDetailPage() {
           <div className="mt-1.5 h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
             <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${occupancyPercent}%` }} />
           </div>
-        </Card>
-
-        <Card className="p-4 bg-gradient-to-br from-white to-amber-50/30">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted">Host</span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-700">
-              <Icon name="user" className="h-4 w-4" />
-            </div>
-          </div>
-          <p className="mt-2 text-sm font-bold text-ink">{data.host}</p>
-          <p className="mt-0.5 text-xs text-muted">Event Organiser</p>
         </Card>
       </div>
 
