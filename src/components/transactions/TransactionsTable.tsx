@@ -104,7 +104,6 @@ export function TransactionsTable() {
               render: (r) => <Badge tone={statusTone(r.status)}>{labelize(r.status)}</Badge>,
             },
             { key: 'method', header: 'Method', render: (r) => r.method },
-            { key: 'reference', header: 'Ref', render: (r) => <span className="font-mono text-xs text-muted">{r.reference}</span> },
           ]}
         />
         <Pagination page={table.page} pages={table.pages} total={table.total} onPage={table.setPage} />
